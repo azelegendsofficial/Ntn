@@ -1,0 +1,297 @@
+```html
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Groups - Official Mobile Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0E0E10',
+                        chalk: '#F9F9FB',
+                        accent: '#18181B'
+                    },
+                    fontFamily: {
+                        sans: ['Cabinet Grotesk', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            background-color: #0E0E10; /* Dark background to create a premium mockup wrapper on desktop, while being full dark on mobile */
+        }
+        /* Custom scrollbar for mobile */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0E0E10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen antialiased text-white">
+
+    <!-- Mobile Device Wrapper (Constrains to absolute gorgeous mobile view on desktop, native on mobile) -->
+    <div class="w-full max-w-md min-h-screen bg-obsidian border-x border-neutral-900 shadow-2xl relative flex flex-col justify-between overflow-x-hidden">
+        
+        <!-- Header / Navigation -->
+        <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-neutral-900 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                <span class="font-extrabold text-sm tracking-widest uppercase">NOTION GROUPS</span>
+            </div>
+            
+            <!-- Synox Collab Badge (with Image Logo) -->
+            <div class="flex items-center space-x-2 bg-neutral-950 border border-neutral-800 px-2.5 py-1 rounded-full">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/8147389097296456048_0" alt="Synox Logo" class="w-3.5 h-3.5 rounded-full object-cover">
+                <span class="text-[10px] font-bold text-neutral-400 tracking-wider">X SYNOX</span>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <main class="flex-grow px-6 pt-8 pb-12 space-y-10">
+            
+            <!-- Branding / Intro -->
+            <div class="space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-neutral-900/60 border border-neutral-800/80 px-3 py-1 rounded-full">
+                    <span class="text-[10px] font-semibold text-neutral-300 tracking-widest uppercase">OFFICIAL COMMUNITY</span>
+                </div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white leading-tight">
+                    Menghubungkan <br>Inovasi dari <br>
+                    <span class="text-neutral-400 underline decoration-neutral-800 underline-offset-4">Serui, Papua</span>.
+                </h1>
+                <p class="text-xs text-neutral-400 leading-relaxed max-w-sm">
+                    Grup ekosistem digital premium yang dibangun oleh <span class="text-white font-semibold">Brian Official</span>. Berkolaborasi dengan infrastruktur tangguh dari <span class="text-white font-semibold">Synox Cloud</span>.
+                </p>
+            </div>
+
+            <!-- Collaboration Card banner -->
+            <div class="bg-gradient-to-r from-neutral-950 to-neutral-900 border border-neutral-800/60 p-4 rounded-2xl flex items-center justify-between">
+                <div class="space-y-1">
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Official Partner</p>
+                    <p class="text-xs font-semibold text-neutral-200">Synox Cloud Infrastructure</p>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/8147389097296456048_0" alt="Synox Logo" class="w-8 h-8 object-cover rounded">
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-400">Layanan Ekosistem</h2>
+                    <span class="text-[10px] text-neutral-600 font-semibold">2 Layanan Utama</span>
+                </div>
+
+                <!-- Product 1: Space AI -->
+                <div class="bg-neutral-950 border border-neutral-900 p-5 rounded-2xl space-y-5 transition-all duration-300 hover:border-neutral-800">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-800 overflow-hidden flex items-center justify-center">
+                                <img src="http://googleusercontent.com/image_collection/image_retrieval/9289173188842103158_0" alt="Space AI Logo" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-extrabold tracking-wide">Space AI</h3>
+                                <span class="text-[10px] text-amber-500 font-bold flex items-center mt-0.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse mr-1"></span>
+                                    Sistem Sedang Maintenance
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-neutral-400 leading-relaxed">
+                        Integrasi asisten kecerdasan buatan eksklusif untuk mempercepat alur kerja dan produktivitas komunitas harian Anda.
+                    </p>
+
+                    <!-- Space AI Action Buttons -->
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <button onclick="openModal()" class="w-full bg-neutral-900 border border-neutral-800 text-neutral-200 hover:bg-neutral-800 text-xs py-2.5 px-3 rounded-xl font-bold flex items-center justify-center space-x-1.5 transition-colors">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span>Lihat Sejarah</span>
+                        </button>
+                        <button disabled class="w-full bg-neutral-900/30 border border-neutral-950 text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed">
+                            Coming Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 2: Space Accounts -->
+                <div class="bg-neutral-950 border border-neutral-900 p-5 rounded-2xl space-y-5 transition-all duration-300 hover:border-neutral-800">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-800 overflow-hidden flex items-center justify-center">
+                                <img src="http://googleusercontent.com/image_collection/image_retrieval/10299112675291868691_0" alt="Space Accounts Logo" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-extrabold tracking-wide">Space Accounts</h3>
+                                <span class="text-[10px] text-neutral-500 font-bold flex items-center mt-0.5">
+                                    Segera Hadir
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-neutral-400 leading-relaxed">
+                        Penyediaan manajemen akses akun premium yang aman, legal, dan dikelola langsung di bawah perlindungan privasi tinggi.
+                    </p>
+
+                    <!-- Space Accounts Button -->
+                    <div class="pt-2">
+                        <button disabled class="w-full bg-neutral-900/30 border border-neutral-950 text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Coming Soon</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Quick Stats/Origin Info -->
+            <div class="border-t border-neutral-900 pt-8 grid grid-cols-2 gap-4">
+                <div class="bg-neutral-950/40 p-4 rounded-xl border border-neutral-900/60">
+                    <p class="text-[9px] font-bold text-neutral-500 uppercase tracking-wider">Pendiri Resmi</p>
+                    <p class="text-xs font-bold text-white mt-1">Brian Official</p>
+                </div>
+                <div class="bg-neutral-950/40 p-4 rounded-xl border border-neutral-900/60">
+                    <p class="text-[9px] font-bold text-neutral-500 uppercase tracking-wider">Lokasi Asal</p>
+                    <p class="text-xs font-bold text-white mt-1">Serui, Papua</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-neutral-950 border-t border-neutral-900 p-6 space-y-4 text-center">
+            <p class="text-[10px] text-neutral-500 tracking-wider font-medium">
+                &copy; 2026 NOTION GROUPS. All Rights Reserved.
+            </p>
+            <p class="text-[9px] text-neutral-600">
+                Kolaborasi Infrastruktur Awan oleh Synox Cloud.
+            </p>
+        </footer>
+
+        <!-- INTERACTIVE HISTORY MODAL (Sejarah Pop-up) -->
+        <div id="historyModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end justify-center hidden opacity-0 transition-opacity duration-300">
+            <div class="w-full max-w-md bg-obsidian border-t border-neutral-800 rounded-t-3xl p-6 space-y-6 transform translate-y-full transition-transform duration-300">
+                
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between border-b border-neutral-900 pb-4">
+                    <div class="space-y-0.5">
+                        <h4 class="text-sm font-extrabold tracking-wide uppercase">Sejarah Notion Groups</h4>
+                        <p class="text-[10px] text-neutral-500">Mulai dari timur terjauh untuk dunia digital</p>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Timeline / History Content -->
+                <div class="space-y-4 overflow-y-auto max-h-[400px] pr-2">
+                    
+                    <!-- Timeline Item 1 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-5 h-5 rounded-full bg-white text-obsidian flex items-center justify-center text-[10px] font-extrabold">1</div>
+                            <div class="w-0.5 h-16 bg-neutral-800 mt-1"></div>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-neutral-500">AWAL MULA (2024)</span>
+                            <h5 class="text-xs font-bold text-white">Inisiasi Komunitas</h5>
+                            <p class="text-[11px] text-neutral-400 leading-relaxed">
+                                Notion Groups dicetuskan pertama kali oleh <strong>Brian Official</strong> di Serui, Kabupaten Kepulauan Yapen, Papua, dengan impian membangun wadah teknologi inovatif bagi anak-anak muda daerah.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-5 h-5 rounded-full bg-neutral-900 border border-neutral-800 text-white flex items-center justify-center text-[10px] font-extrabold">2</div>
+                            <div class="w-0.5 h-16 bg-neutral-800 mt-1"></div>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-neutral-500">EKSPANSI LAYANAN (2025)</span>
+                            <h5 class="text-xs font-bold text-white">Space AI & Accounts</h5>
+                            <p class="text-[11px] text-neutral-400 leading-relaxed">
+                                Memulai perancangan sistem asisten cerdas berbasis AI bernama Space AI serta manajemen privasi akun premium lewat Space Accounts untuk kebutuhan ekosistem produktivitas yang mandiri.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3 -->
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-5 h-5 rounded-full bg-neutral-900 border border-neutral-800 text-white flex items-center justify-center text-[10px] font-extrabold">3</div>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-neutral-500">SINKRONISASI NASIONAL (2026)</span>
+                            <h5 class="text-xs font-bold text-white">Aliansi Synox Cloud</h5>
+                            <p class="text-[11px] text-neutral-400 leading-relaxed">
+                                Memasuki babak baru dengan menjalin kemitraan infrastruktur server berskala besar dengan <strong>Synox Cloud</strong> guna memastikan performa tinggi dan uptime maksimal bagi seluruh produk masa depan.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Button -->
+                <button onclick="closeModal()" class="w-full bg-white text-obsidian text-xs py-3 rounded-xl font-bold transition-all hover:bg-neutral-200">
+                    Selesai Membaca
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Interaction Script -->
+    <script>
+        const modal = document.getElementById('historyModal');
+        const modalContent = modal.querySelector('.transform');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('translate-y-full');
+                modalContent.classList.add('translate-y-0');
+            }, 50);
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('translate-y-0');
+            modalContent.classList.add('translate-y-full');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close modal on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
+
+```
