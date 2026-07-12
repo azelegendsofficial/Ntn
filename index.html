@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Groups - Official Mobile Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0E0E10',
+                        chalk: '#F9F9FB',
+                        accent: '#18181B'
+                    },
+                    fontFamily: {
+                        sans: ['Cabinet Grotesk', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            background-color: #0E0E10; 
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0E0E10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 10px;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen antialiased text-white">
+
+    <!-- Responsive Device Wrapper (Grows beautifully from Mobile up to PC Screen sizes) -->
+    <div class="w-full max-w-7xl min-h-screen bg-obsidian md:border-x border-neutral-900 shadow-2xl relative flex flex-col justify-between overflow-x-hidden">
+        
+        <!-- Header / Navigation -->
+        <header class="sticky top-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-neutral-900 px-6 py-4 flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="font-extrabold text-sm md:text-base tracking-widest uppercase">NOTION GROUPS</span>
+                <span class="text-[9px] text-neutral-500 font-bold uppercase tracking-wider">By Brian Official · Serui</span>
+            </div>
+            
+            <!-- Synox Collab Badge -->
+            <div class="flex items-center space-x-2 bg-neutral-950 border border-neutral-800 px-2.5 py-1 rounded-full">
+                <img src="/icon.jpg" alt="Synox Logo" class="w-3.5 h-3.5 rounded-full object-cover">
+                <span class="text-[10px] font-bold text-neutral-400 tracking-wider">X SYNOX</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow px-6 pt-8 pb-12 space-y-10 max-w-5xl mx-auto w-full">
+            
+            <!-- Grid Top Layout for Tablet/PC Devices -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <!-- Branding / Intro -->
+                <div class="space-y-4">
+                    <div class="inline-flex items-center space-x-2 bg-neutral-900/60 border border-neutral-800/80 px-3 py-1 rounded-full">
+                        <span class="text-[10px] font-semibold text-neutral-300 tracking-widest uppercase">Papua Tech Ecosystem</span>
+                    </div>
+                    <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                        Hub Komunitas Digital <br>Eksklusif dari <br>
+                        <span class="text-neutral-400 underline decoration-neutral-800 underline-offset-4">Serui, Papua</span>.
+                    </h1>
+                    <p class="text-xs md:text-sm text-neutral-400 leading-relaxed max-w-sm">
+                        Dikembangkan langsung oleh <span class="text-white font-semibold">Brian official</span> di Serui, Papua. Kami berkolaborasi dengan <span class="text-white font-semibold">Synox Cloud</span> membangun infrastruktur digital modern.
+                    </p>
+                </div>
+
+                <!-- Collaboration Card banner -->
+                <div class="bg-gradient-to-r from-neutral-950 to-neutral-900 border border-neutral-800/60 p-5 rounded-2xl flex items-center justify-between h-fit">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Official Partner</p>
+                        <p class="text-sm font-semibold text-neutral-200">Synox Cloud Infrastructure</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                        <img src="/icon.jpg" alt="Synox Logo" class="w-10 h-10 object-cover rounded">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-400">Daftar Layanan & Produk</h2>
+                    <span class="text-[10px] text-neutral-600 font-semibold">3 Informasi Utama</span>
+                </div>
+
+                <!-- Grid Dynamic Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Product 1: Space AI -->
+                    <div class="bg-neutral-950 border border-neutral-900 p-5 rounded-2xl flex flex-col justify-between space-y-5 transition-all duration-300 hover:border-neutral-800">
+                        <div class="space-y-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-800 overflow-hidden flex items-center justify-center">
+                                        <img src="/space.jpg" alt="Space AI Logo" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-extrabold tracking-wide">Space AI</h3>
+                                        <span class="text-[10px] text-amber-500 font-bold flex items-center mt-0.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse mr-1"></span>
+                                            Sedang Maintenance
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Asisten Kecerdasan Buatan super cerdas terintegrasi untuk mengotomatisasi sistem kerja komunitas.
+                            </p>
+                        </div>
+
+                        <!-- Space AI Action Buttons (Fungsi onclick diselaraskan ke openHistoryModal) -->
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="openHistoryModal()" class="w-full bg-neutral-900 border border-neutral-800 text-neutral-200 hover:bg-neutral-800 text-xs py-2.5 px-3 rounded-xl font-bold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <span>Sejarah</span>
+                            </button>
+                            <button disabled class="w-full bg-neutral-900/30 border border-neutral-950 text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed">
+                                Coming Soon
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 2: Space Accounts -->
+                    <div class="bg-neutral-950 border border-neutral-900 p-5 rounded-2xl flex flex-col justify-between space-y-5 transition-all duration-300 hover:border-neutral-800">
+                        <div class="space-y-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-800 overflow-hidden flex items-center justify-center">
+                                        <img src="/s_accounts.png" alt="Space Accounts Logo" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-extrabold tracking-wide">Space Accounts</h3>
+                                        <span class="text-[10px] text-neutral-500 font-bold flex items-center mt-0.5">
+                                            Layanan Manajemen Akun
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Sistem pengelolaan akun premium terintegrasi yang aman, andal, dan siap menyokong kebutuhan tim.
+                            </p>
+                        </div>
+
+                        <!-- Space Accounts Button -->
+                        <div class="pt-2">
+                            <button disabled class="w-full bg-neutral-900/30 border border-neutral-950 text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-lock"></i>
+                                <span>Coming Soon</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: REGISTRASI CARD -->
+                    <div class="bg-gradient-to-b from-neutral-950 to-neutral-900 border border-neutral-800 p-5 rounded-2xl flex flex-col justify-between space-y-5 transition-all duration-300 hover:border-neutral-700">
+                        <div class="space-y-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 rounded-xl bg-neutral-900/80 border border-neutral-800 flex items-center justify-center text-neutral-400">
+                                        <i class="fa-solid fa-id-card text-xl text-neutral-300"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-extrabold tracking-wide text-white">Registrasi Hub</h3>
+                                        <span class="text-[10px] text-indigo-400 font-bold flex items-center mt-0.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse mr-1"></span>
+                                            Coming Soon
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Pendaftaran keanggotaan baru Notion Groups ditutup sementara karena ekosistem sedang melakukan <span class="text-neutral-200 font-semibold">transformasi serta penyesuaian visi dan misi utama</span> yang baru.
+                            </p>
+                        </div>
+
+                        <!-- Registration Button Status -->
+                        <div class="pt-2">
+                            <button disabled class="w-full bg-indigo-950/20 border border-indigo-900/40 text-indigo-400/60 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-sliders"></i>
+                                <span>Restrukturisasi Visi</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Quick Stats/Origin Info -->
+            <div class="border-t border-neutral-900 pt-8 grid grid-cols-2 gap-4 max-w-md">
+                <div class="bg-neutral-950/40 p-4 rounded-xl border border-neutral-900/60">
+                    <p class="text-[9px] font-bold text-neutral-500 uppercase tracking-wider">Pendiri Resmi</p>
+                    <p class="text-xs font-bold text-white mt-1">Brian Official</p>
+                </div>
+                <div class="bg-neutral-950/40 p-4 rounded-xl border border-neutral-900/60">
+                    <p class="text-[9px] font-bold text-neutral-500 uppercase tracking-wider">Lokasi Asal</p>
+                    <p class="text-xs font-bold text-white mt-1">Serui, Papua</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-neutral-950 border-t border-neutral-900 p-6 space-y-4 text-center">
+            <p class="text-[10px] text-neutral-500 tracking-wider font-medium">
+                &copy; 2026 NOTION GROUPS × SYNOX CLOUD. All Rights Reserved.
+            </p>
+            <p class="text-[9px] text-neutral-600">
+                Dibuat khusus untuk ekosistem komunitas Brian official di Serui, Papua.
+            </p>
+        </footer>
+
+
+        <!-- POP-UP MODAL: SEJARAH EVOLUSI SPACE AI -->
+        <div id="historyModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center hidden opacity-0 transition-opacity duration-300 p-0 sm:p-4">
+            <!-- Modal Box -->
+            <div id="modalContent" class="w-full max-w-md bg-obsidian border-t sm:border border-neutral-800 rounded-t-3xl sm:rounded-3xl p-6 space-y-6 transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300 overflow-y-auto max-h-[85vh] sm:max-h-[80vh] no-scrollbar shadow-2xl">
+                
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between border-b border-neutral-900 pb-4 sticky top-0 bg-obsidian z-10">
+                    <div class="space-y-0.5">
+                        <h4 class="text-sm font-extrabold tracking-wide uppercase">Arsip Sejarah Space AI</h4>
+                        <p class="text-[10px] text-neutral-500">Evolusi Pengembangan Produk</p>
+                    </div>
+                    <button onclick="closeHistoryModal()" class="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Timeline Perjalanan -->
+                <div class="space-y-6 relative border-l border-neutral-800 ml-2.5 pl-4">
+                    
+                    <!-- ERA 1: OLD ERA (2024) -->
+                    <div class="relative space-y-2">
+                        <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-neutral-600 border-2 border-obsidian"></span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] font-bold bg-neutral-900 px-2 py-0.5 rounded text-neutral-400">v0.1 Beta</span>
+                            <span class="text-xs font-bold text-neutral-500">25 November 2024</span>
+                        </div>
+                        <h4 class="font-bold text-xs text-white">Old Era — Integrasi Awal Chatbot</h4>
+                        <p class="text-[11px] text-neutral-400 leading-relaxed">
+                            Awal mula rilis awal. Pada era ini, Space AI masih memanfaatkan basis kekuatan API Gemini AI 1.5 Pro dan secara visual tampak sederhana layaknya interface chatbot standar pada umumnya.
+                        </p>
+                        <div class="rounded-xl overflow-hidden border border-neutral-900 bg-neutral-950 mt-1">
+                            <img src="old2.png" alt="Space AI Old Era Screen" class="w-full h-auto object-cover">
+                        </div>
+                    </div>
+
+                    <!-- ERA 2: NEW ERA - AWAL (2025) -->
+                    <div class="relative space-y-2">
+                        <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-purple-500 border-2 border-obsidian"></span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] font-bold bg-purple-950/60 border border-purple-900 px-2 py-0.5 rounded text-purple-400">v1.3 New Era</span>
+                            <span class="text-xs font-bold text-purple-500">8 Januari 2025</span>
+                        </div>
+                        <h4 class="font-bold text-xs text-purple-300">The New Era — Perubahan Besar</h4>
+                        <p class="text-[11px] text-neutral-400 leading-relaxed">
+                            Gerbang era baru dimulai dengan perombakan struktur masif. Interface beralih menjadi jauh lebih modern, terstruktur, serta memiliki panel navigasi instan yang optimal.
+                        </p>
+                        <div class="grid grid-cols-2 gap-1.5 mt-1">
+                            <img src="newera.png" alt="New Era Screen 1" class="rounded-xl border border-neutral-900 w-full object-cover">
+                            <img src="newera1.png" alt="New Era Screen 2" class="rounded-xl border border-neutral-900 w-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- ERA 3: NEW ERA - UPDATE (2025) -->
+                    <div class="relative space-y-2">
+                        <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-blue-500 border-2 border-obsidian"></span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] font-bold bg-blue-950/60 border border-blue-900 px-2 py-0.5 rounded text-blue-400">v3.4.1</span>
+                            <span class="text-xs font-bold text-blue-500">21 Maret 2025</span>
+                        </div>
+                        <h4 class="font-bold text-xs text-blue-300">Pembaruan UI & Fitur Kerja</h4>
+                        <p class="text-[11px] text-neutral-400 leading-relaxed">
+                            Masih berjalan di dalam payung New Era, pembaruan ini membawa adaptasi skema warna baru, polesan UI yang makin matang, penambahan tools produktivitas, serta pembersihan bug secara menyeluruh.
+                        </p>
+                        <div class="grid grid-cols-2 gap-1.5 mt-1">
+                            <img src="newera2.png" alt="New Era Update 1" class="rounded-xl border border-neutral-900 w-full object-cover">
+                            <img src="newera3.png" alt="New Era Update 2" class="rounded-xl border border-neutral-900 w-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- ERA 4: ULTIMATE STRIX (2026) -->
+                    <div class="relative space-y-2">
+                        <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-obsidian animate-pulse"></span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[10px] font-bold bg-neutral-100 px-2 py-0.5 rounded text-obsidian">v5.6 Ultimate</span>
+                            <span class="text-xs font-bold text-white animate-pulse">Coming Soon (2026)</span>
+                        </div>
+                        <h4 class="font-bold text-xs text-white">Ultimate Strix — Perombakan Total</h4>
+                        <p class="text-[11px] text-neutral-400 leading-relaxed">
+                            Menghitung hari menuju peluncuran agung. Seluruh tampilan dirombak habis-habisan secara revolusioner, menghadirkan fungsi multi-model mutakhir berkecepatan tinggi serta arsitektur menu tercanggih.
+                        </p>
+                        <div class="space-y-1.5 mt-2">
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <img src="ultimate.jpg" alt="Strix Preview 1" class="rounded-xl border border-neutral-900 w-full object-cover">
+                                <img src="ultimate1.jpg" alt="Strix Preview 2" class="rounded-xl border border-neutral-900 w-full object-cover">
+                            </div>
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <img src="ultimate2.png" alt="Strix Preview 3" class="rounded-xl border border-neutral-900 w-full object-cover">
+                                <img src="ultimate3.png" alt="Strix Preview 4" class="rounded-xl border border-neutral-900 w-full object-cover">
+                                <img src="ultimate4.png" alt="Strix Preview 5" class="rounded-xl border border-neutral-900 w-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Button -->
+                <button onclick="closeHistoryModal()" class="w-full bg-white text-obsidian text-xs py-3 rounded-xl font-bold transition-all hover:bg-neutral-200">
+                    Selesai Membaca
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Kontrol Interaksi Pop-up Modal -->
+    <script>
+        const modal = document.getElementById('historyModal');
+        const modalContent = document.getElementById('modalContent');
+
+        function openHistoryModal() {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                if (window.innerWidth < 640) {
+                    modalContent.classList.remove('translate-y-full');
+                    modalContent.classList.add('translate-y-0');
+                } else {
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }
+            }, 50);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHistoryModal() {
+            if (window.innerWidth < 640) {
+                modalContent.classList.remove('translate-y-0');
+                modalContent.classList.add('translate-y-full');
+            } else {
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+            }
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+            document.body.style.overflow = '';
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeHistoryModal();
+            }
+        });
+    </script>
+</body>
+</html>
