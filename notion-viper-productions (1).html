@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Viper Productions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0A0A0B',
+                        ink: '#151516',
+                        surface: '#1C1C1E',
+                        chrome: '#FFFFFF',
+                        steel: '#A6A6AA',
+                        graphite: '#3A3A3D',
+                        bone: '#F5F5F5',
+                        smoke: '#8A8A8F',
+                    },
+                    fontFamily: {
+                        sans: ['Cabinet Grotesk', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            background-color: #0A0A0B;
+            overflow-x: hidden;
+        }
+        /* Locked only while the loading screen / a modal is open — JS toggles this */
+        body.lock-scroll {
+            overflow-y: hidden;
+        }
+        /* Signature: faint diamond texture, quiet and monochrome */
+        .scale-texture {
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06) 0%, transparent 60%),
+                repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 14px),
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 14px);
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0A0A0B; }
+        ::-webkit-scrollbar-thumb { background: #55555A; border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* LOADING SCREEN */
+        #loadingScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #0A0A0B;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+        #loadingScreen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .load-ring {
+            position: relative;
+            width: 84px;
+            height: 84px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .load-ring::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            border: 1.5px solid rgba(255,255,255,0.12);
+        }
+        .load-ring::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            border: 1.5px solid transparent;
+            border-top-color: #FFFFFF;
+            border-right-color: rgba(255,255,255,0.5);
+            animation: ringSpin 1.1s linear infinite;
+        }
+        .load-logo {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 9999px;
+            animation: logoPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes ringSpin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes logoPulse {
+            0%, 100% { opacity: 0.85; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        .load-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 5px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.2s;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .load-sub {
+            color: #8A8A8F;
+            font-size: 0.7rem;
+            margin-top: 12px;
+            letter-spacing: 4px;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.7;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 0.85; }
+        }
+        .load-bar-track {
+            width: 160px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 9999px;
+            margin-top: 18px;
+            overflow: hidden;
+        }
+        .load-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #FFFFFF;
+            border-radius: 9999px;
+            animation: barFill 4s ease forwards;
+        }
+        @keyframes barFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Monochrome gradient background */
+        .steel-bg {
+            background: linear-gradient(160deg, #0A0A0B 0%, #161617 35%, #1E1E1F 65%, #0A0A0B 100%);
+        }
+        .steel-border {
+            border-color: #FFFFFF;
+        }
+        .steel-glow {
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+        }
+        .steel-text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+        }
+
+        /* Card hover effect */
+        .card-steel {
+            transition: all 0.25s ease;
+            border: 1px solid #232325;
+            background: #151516;
+        }
+        .card-steel:hover {
+            border-color: #FFFFFF;
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.06);
+            transform: translateY(-3px);
+        }
+        .fang-divider {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fang-divider img { flex-shrink: 0; }
+
+        /* Modal animation */
+        .modal-enter {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="lock-scroll">
+
+    <!-- ============ LOADING SCREEN ============ -->
+    <div id="loadingScreen">
+        <div class="load-ring">
+            <img src="/logo.png" alt="Notion Viper Logo" class="load-logo">
+        </div>
+        <div class="load-text">NOTION VIPER PRODUCTIONS</div>
+        <div class="load-sub" id="loadSub">LOADING</div>
+        <div class="load-bar-track"><div class="load-bar-fill"></div></div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div id="mainContent" class="flex justify-center items-center min-h-screen antialiased text-white" style="display:none;">
+
+        <div class="w-full max-w-7xl min-h-screen steel-bg md:border-x border-[#4D4D52]/30 shadow-2xl relative flex flex-col justify-between overflow-x-hidden">
+            
+            <!-- Header -->
+            <header class="sticky top-0 z-40 bg-[#0A0A0B]/90 backdrop-blur-md border-b border-[#4D4D52]/30 px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="/logo.png" alt="Notion Viper Logo" class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-[#4D4D52]/40">
+                    <div class="flex flex-col">
+                        <span class="font-extrabold text-sm md:text-base tracking-widest uppercase text-chrome steel-text-glow leading-none">Notion Viper</span>
+                        <span class="text-[9px] text-smoke font-semibold uppercase tracking-wider mt-1">Brian Official & Dion · Serui, Papua</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="openTosModal()" class="text-xs bg-[#4D4D52]/15 border border-[#4D4D52]/40 hover:border-[#4D4D52] hover:bg-[#4D4D52]/25 text-neutral-200 font-bold px-3 py-1.5 rounded-xl flex items-center space-x-1.5 transition-colors cursor-pointer">
+                        <i class="fa-solid fa-file-contract text-chrome"></i>
+                        <span class="hidden sm:inline">Terms of Service</span>
+                    </button>
+                    <div class="hidden sm:flex items-center space-x-2 bg-ink border border-[#4D4D52]/25 px-2.5 py-1 rounded-full">
+                        <img src="/icon.jpg" alt="Synox Logo" class="w-3.5 h-3.5 rounded-full object-cover">
+                        <span class="text-[10px] font-bold text-chrome/70 tracking-wider font-mono">X SYNOX</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main -->
+            <main class="flex-grow px-6 pt-10 pb-12 space-y-12 max-w-6xl mx-auto w-full scale-texture">
+                
+                <!-- Grid Top -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center space-x-2 bg-[#4D4D52]/10 border border-[#4D4D52]/30 px-3 py-1 rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-chrome"></span>
+                            <span class="text-[10px] font-mono font-semibold text-chrome/90 tracking-widest uppercase">Papua Tech Ecosystem</span>
+                        </div>
+                        <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-bone leading-[1.1]">
+                            Hub Komunitas Digital<br>Eksklusif dari<br>
+                            <span class="text-chrome underline decoration-graphite underline-offset-4">Serui, Papua</span>.
+                        </h1>
+                        <p class="text-xs md:text-sm text-smoke leading-relaxed max-w-sm">
+                            Dikembangkan langsung oleh <span class="text-chrome font-semibold">Brian Official</span> & <span class="text-chrome font-semibold">Dion</span> di Serui, Papua. Berkolaborasi dengan <span class="text-chrome font-semibold">Synox Cloud</span> membangun infrastruktur digital modern.
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-[#1C1C1E] to-[#0C0C0E] border border-[#4D4D52]/30 p-5 rounded-2xl flex items-center justify-between h-fit steel-glow">
+                        <div class="space-y-1">
+                            <p class="text-[10px] font-mono font-bold text-chrome/70 uppercase tracking-wider">Official Partner</p>
+                            <p class="text-sm font-semibold text-neutral-100">Synox Cloud Infrastructure</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-white/5 border border-[#4D4D52]/25 flex items-center justify-center overflow-hidden">
+                            <img src="/icon.jpg" alt="Synox Logo" class="w-10 h-10 object-cover rounded">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-[#4D4D52]/20 pb-3">
+                        <div class="fang-divider">
+                            <img src="/logo.png" alt="" class="w-3.5 h-3.5 rounded-full object-cover opacity-80">
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-chrome/80">Daftar Layanan & Produk</h2>
+                        </div>
+                        <span class="text-[10px] text-neutral-600 font-mono font-semibold">Ekosistem Notion Viper</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Product 1: Space AI -->
+                        <div class="card-steel border-[#1E1B1D] p-5 rounded-2xl flex flex-col justify-between space-y-5">
+                            <div class="space-y-4">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#4D4D52]/30 overflow-hidden flex items-center justify-center">
+                                            <img src="/space.jpg" alt="Space AI Logo" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-extrabold tracking-wide text-bone">Space AI</h3>
+                                            <span class="text-[10px] text-chrome font-bold flex items-center mt-0.5">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-chrome animate-pulse mr-1"></span>
+                                                Maintenance
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-neutral-400 leading-relaxed">Asisten Kecerdasan Buatan super cerdas untuk mengotomatisasi sistem kerja komunitas.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 pt-2">
+                                <button onclick="openHistoryModal()" class="w-full bg-[#1C1C1E] border border-[#4D4D52]/40 text-neutral-200 hover:bg-[#2A2A2C] text-xs py-2.5 px-3 rounded-xl font-bold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                    <span>Sejarah</span>
+                                </button>
+                                <button disabled class="w-full bg-[#1C1C1E]/30 border border-[#1E1B1D] text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed">Coming Soon</button>
+                            </div>
+                        </div>
+
+                        <!-- Product 2: Space Accounts -->
+                        <div class="card-steel border-[#1E1B1D] p-5 rounded-2xl flex flex-col justify-between space-y-5">
+                            <div class="space-y-4">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#4D4D52]/30 overflow-hidden flex items-center justify-center">
+                                            <img src="/s_accounts.png" alt="Space Accounts Logo" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-extrabold tracking-wide text-bone">Space Accounts</h3>
+                                            <span class="text-[10px] text-smoke font-bold">Manajemen Akun</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-neutral-400 leading-relaxed">Sistem pengelolaan akun premium terintegrasi, aman, andal, siap menyokong tim.</p>
+                            </div>
+                            <div class="pt-2">
+                                <button disabled class="w-full bg-[#1C1C1E]/30 border border-[#1E1B1D] text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-lock"></i> <span>Coming Soon</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Product 3: Notion Workspace -->
+                        <div class="card-steel border-[#1E1B1D] p-5 rounded-2xl flex flex-col justify-between space-y-5">
+                            <div class="space-y-4">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#4D4D52]/30 flex items-center justify-center text-chrome">
+                                            <i class="fa-solid fa-cubes text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-extrabold tracking-wide text-bone">Notion Workspace</h3>
+                                            <span class="text-[10px] text-chrome/80 font-bold">Web App Hibrida</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-neutral-400 leading-relaxed">Web app hibrid: Excel + Word + Canva dalam satu ruang kerja.</p>
+                            </div>
+                            <div class="pt-2">
+                                <button disabled class="w-full bg-[#1C1C1E]/30 border border-[#1E1B1D] text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-laptop-code"></i> <span>Coming Soon</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Product 4: Notion Music -->
+                        <div class="card-steel border-[#1E1B1D] p-5 rounded-2xl flex flex-col justify-between space-y-5">
+                            <div class="space-y-4">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#4D4D52]/30 flex items-center justify-center text-chrome">
+                                            <i class="fa-solid fa-music text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-extrabold tracking-wide text-bone">Notion Music</h3>
+                                            <span class="text-[10px] text-chrome/90 font-bold">Pemutar Musik Gratis</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-neutral-400 leading-relaxed">Pemutar musik gratis tanpa iklan untuk aktivitas produktivitas anggota.</p>
+                            </div>
+                            <div class="pt-2">
+                                <button disabled class="w-full bg-[#1C1C1E]/30 border border-[#1E1B1D] text-neutral-600 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-play"></i> <span>Coming Soon</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Product 5: NTG Programming -->
+                        <div class="card-steel border-[#1E1B1D] p-5 rounded-2xl flex flex-col justify-between space-y-5">
+                            <div class="space-y-4">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#1C1C1E] border border-[#4D4D52]/30 flex items-center justify-center text-chrome">
+                                            <i class="fa-solid fa-code text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-extrabold tracking-wide text-bone">NTG Programming</h3>
+                                            <span class="text-[10px] text-chrome/80 font-bold">Bahasa Custom</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-neutral-400 leading-relaxed">Bahasa pemrograman inovatif Notion Tech Generate untuk ekosistem.</p>
+                            </div>
+                            <div class="pt-2">
+                                <a href="https://github.com/brianofficialid/NTG-Programming-Language/tree/main" target="_blank" class="w-full bg-[#1C1C1E] border border-[#4D4D52]/40 text-white hover:bg-[#2A2A2C] text-xs py-2.5 px-3 rounded-xl font-bold flex items-center justify-center space-x-2 transition-colors">
+                                    <i class="fa-brands fa-github"></i> <span>Lanjut Ke Github</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Product 6: Registrasi -->
+                        <div class="card-steel bg-gradient-to-b from-[#1C1C1E] to-[#0A0A0B] border-[#4D4D52]/30 p-5 rounded-2xl flex flex-col justify-between space-y-5">
+                            <div class="space-y-4">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#1C1C1E]/80 border border-[#4D4D52]/30 flex items-center justify-center">
+                                            <i class="fa-solid fa-id-card text-xl text-smoke"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-extrabold tracking-wide text-bone">Registrasi Hub</h3>
+                                            <span class="text-[10px] text-chrome/80 font-bold flex items-center mt-0.5">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-chrome animate-pulse mr-1"></span>
+                                                Dibuka Beberapa Bulan Lagi
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-smoke leading-relaxed">Pendaftaran keanggotaan ditutup sementara untuk <span class="text-neutral-200 font-semibold">transformasi visi & misi utama</span>, dan direncanakan dibuka kembali dalam beberapa bulan ke depan.</p>
+                            </div>
+                            <div class="pt-2">
+                                <button disabled class="w-full bg-[#4D4D52]/10 border border-[#4D4D52]/25 text-chrome/50 text-xs py-2.5 px-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-hourglass-half"></i> <span>Segera Dibuka</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="border-t border-[#4D4D52]/20 pt-8 grid grid-cols-2 gap-4 max-w-md">
+                    <div class="bg-ink p-4 rounded-xl border border-[#4D4D52]/20">
+                        <p class="text-[9px] font-mono font-bold text-chrome/70 uppercase tracking-wider">Pendiri</p>
+                        <p class="text-xs font-bold text-bone mt-1">Brian Official & Dion</p>
+                    </div>
+                    <div class="bg-ink p-4 rounded-xl border border-[#4D4D52]/20">
+                        <p class="text-[9px] font-mono font-bold text-chrome/70 uppercase tracking-wider">Lokasi</p>
+                        <p class="text-xs font-bold text-bone mt-1">Serui, Papua</p>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Footer -->
+            <footer class="bg-[#0A0A0B] border-t border-[#4D4D52]/20 p-6 space-y-3 text-center">
+                <div class="fang-divider justify-center">
+                    <img src="/logo.png" alt="" class="w-3 h-3 rounded-full object-cover opacity-70">
+                    <button onclick="openTosModal()" class="text-[10px] text-chrome/70 hover:text-chrome underline underline-offset-2 font-semibold">Syarat & Ketentuan (Terms of Service)</button>
+                </div>
+                <p class="text-[10px] text-smoke tracking-wider font-mono">&copy; 2026 NOTION VIPER PRODUCTIONS × SYNOX CLOUD</p>
+                <p class="text-[9px] text-neutral-600">Dibuat khusus untuk ekosistem komunitas Brian Official & Dion di Serui, Papua.</p>
+            </footer>
+
+            <!-- ======== MODAL 1: SEJARAH SPACE AI (png backgrounds) ======== -->
+            <div id="historyModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-end sm:items-center justify-center hidden opacity-0 transition-opacity duration-300 p-0 sm:p-4">
+                <div id="modalContent" class="w-full max-w-md bg-ink border-t sm:border border-[#4D4D52]/40 rounded-t-3xl sm:rounded-3xl p-6 space-y-6 transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300 overflow-y-auto max-h-[85vh] sm:max-h-[80vh] no-scrollbar shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-[#4D4D52]/30 pb-4 sticky top-0 bg-ink z-10">
+                        <div class="space-y-0.5">
+                            <h4 class="text-sm font-extrabold tracking-wide uppercase text-chrome">Arsip Sejarah Space AI</h4>
+                            <p class="text-[10px] text-smoke">Evolusi Pengembangan Produk</p>
+                        </div>
+                        <button onclick="closeHistoryModal()" class="w-8 h-8 rounded-full bg-[#1C1C1E] border border-[#4D4D52]/30 flex items-center justify-center text-smoke hover:text-bone transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-6 relative border-l border-[#4D4D52]/30 ml-2.5 pl-4">
+                        <!-- ERA 1 -->
+                        <div class="relative space-y-2">
+                            <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-neutral-600 border-2 border-ink"></span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] font-mono font-bold bg-[#1C1C1E] px-2 py-0.5 rounded text-smoke border border-[#4D4D52]/20">v0.1 Beta</span>
+                                <span class="text-xs font-bold text-neutral-500">25 Nov 2024</span>
+                            </div>
+                            <h4 class="font-bold text-xs text-bone">Old Era — Integrasi Awal Chatbot</h4>
+                            <p class="text-[11px] text-smoke leading-relaxed">Awal mula rilis. Space AI masih memakai API Gemini AI 1.5 Pro dengan interface chatbot standar.</p>
+                            <div class="rounded-xl overflow-hidden border border-[#4D4D52]/20 bg-[#0A0A0B] mt-1">
+                                <img src="old2.png" alt="Space AI Old Era" class="w-full h-auto object-cover">
+                            </div>
+                        </div>
+
+                        <!-- ERA 2 -->
+                        <div class="relative space-y-2">
+                            <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-steel border-2 border-ink"></span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] font-mono font-bold bg-[#242426]/60 border border-[#4D4D52]/50 px-2 py-0.5 rounded text-chrome">v1.3 New Era</span>
+                                <span class="text-xs font-bold text-chrome/80">8 Jan 2025</span>
+                            </div>
+                            <h4 class="font-bold text-xs text-chrome/90">The New Era — Perubahan Besar</h4>
+                            <p class="text-[11px] text-smoke leading-relaxed">Perombakan struktur masif. Interface modern, terstruktur, panel navigasi instan.</p>
+                            <div class="grid grid-cols-2 gap-1.5 mt-1">
+                                <img src="newera.png" alt="New Era 1" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                <img src="newera1.jpg" alt="New Era 2" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- ERA 3 -->
+                        <div class="relative space-y-2">
+                            <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-chrome border-2 border-ink"></span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] font-mono font-bold bg-[#4D4D52]/20 border border-[#4D4D52]/50 px-2 py-0.5 rounded text-chrome">v3.4.1</span>
+                                <span class="text-xs font-bold text-chrome/90">21 Mar 2025</span>
+                            </div>
+                            <h4 class="font-bold text-xs text-chrome">Pembaruan UI & Fitur</h4>
+                            <p class="text-[11px] text-smoke leading-relaxed">Skema warna baru, polesan UI matang, tools produktivitas, pembersihan bug.</p>
+                            <div class="grid grid-cols-2 gap-1.5 mt-1">
+                                <img src="newera2.png" alt="New Era Update 1" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                <img src="newera3.png" alt="New Era Update 2" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- ERA 4: ULTIMATE STRIX -->
+                        <div class="relative space-y-2">
+                            <span class="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-bone border-2 border-ink animate-pulse"></span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] font-mono font-bold bg-bone px-2 py-0.5 rounded text-[#0A0A0B]">v5.6 Ultimate</span>
+                                <span class="text-xs font-bold text-bone animate-pulse">Coming Soon (2026)</span>
+                            </div>
+                            <h4 class="font-bold text-xs text-bone">Ultimate Strix — Perombakan Total</h4>
+                            <p class="text-[11px] text-smoke leading-relaxed">Menghitung hari menuju peluncuran agung. Multi-model mutakhir, arsitektur menu tercanggih.</p>
+                            <div class="space-y-1.5 mt-2">
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <img src="ultimate.png" alt="Strix 1" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                    <img src="ultimate1.png" alt="Strix 2" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                </div>
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <img src="ultimate2.png" alt="Strix 3" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                    <img src="ultimate3.png" alt="Strix 4" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                    <img src="ultimate4.png" alt="Strix 5" class="rounded-xl border border-[#4D4D52]/20 w-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="closeHistoryModal()" class="w-full bg-chrome hover:bg-[#D0D0D3] text-black text-xs py-3 rounded-xl font-bold transition-all">Selesai Membaca</button>
+                </div>
+            </div>
+
+            <!-- ======== MODAL 2: TOS (200+ Rules) ======== -->
+            <div id="tosModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-end sm:items-center justify-center hidden opacity-0 transition-opacity duration-300 p-0 sm:p-4">
+                <div id="tosModalContent" class="w-full max-w-lg bg-ink border-t sm:border border-[#4D4D52]/40 rounded-t-3xl sm:rounded-3xl p-6 space-y-6 transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300 overflow-y-auto max-h-[85vh] sm:max-h-[80vh] no-scrollbar shadow-2xl">
+                    
+                    <div class="flex items-center justify-between border-b border-[#4D4D52]/30 pb-4 sticky top-0 bg-ink z-10">
+                        <div class="space-y-0.5">
+                            <h4 class="text-sm font-extrabold tracking-wide uppercase text-chrome">Terms of Service & Rules</h4>
+                            <p class="text-[10px] text-smoke">Dirumuskan Sejak 2022 · Era Space Community ID</p>
+                        </div>
+                        <button onclick="closeTosModal()" class="w-8 h-8 rounded-full bg-[#1C1C1E] border border-[#4D4D52]/30 flex items-center justify-center text-smoke hover:text-bone transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- NEW UPDATE BADGE -->
+                    <div class="bg-white/5 border border-white/30 p-3.5 rounded-xl space-y-1">
+                        <p class="font-extrabold text-chrome uppercase tracking-wider text-[10px]">⚠️ NEW UPDATE — TERMS OF SERVICE v2.0</p>
+                        <p class="text-[11px] text-neutral-300">
+                            <strong>Pembaruan Sanksi:</strong> Setiap pelanggaran aturan di bawah ini akan dikenai <strong class="text-chrome">BANNED IP PERMANEN</strong> tanpa ampun. Tidak ada banding.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 text-xs text-neutral-300 leading-relaxed">
+
+                        <!-- 200+ RULES (diringkas jadi 50 poin dengan sub-poin agar mencapai 200+) -->
+                        <div class="space-y-3">
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1">A. INTEGRITAS & LOYALITAS (1-25)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">1.</span> <strong>Larangan bermuka dua (munafik):</strong> Dilarang keras menunjukkan sikap suportif di depan publik namun melakukan pembusukan, manipulasi, atau tindakan munafik yang merugikan nama baik komunitas maupun tim pengembang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">2.</span> <strong>Kritik membangun:</strong> Setiap kritik harus disampaikan secara terbuka dan bermartabat, bukan melalui gosip atau fitnah di belakang layar.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">3.</span> <strong>Larangan provokasi:</strong> Dilarang melakukan provokasi, mengadu domba, atau memecah belah anggota komunitas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">4.</span> <strong>Kebohongan publik:</strong> Menyebarkan informasi palsu tentang komunitas, produk, atau pendiri adalah pelanggaran serius.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">5.</span> <strong>Menghormati pendiri dan tim:</strong> Segala bentuk penghinaan, pelecehan, atau ancaman terhadap pendiri dan tim pengembang tidak akan ditoleransi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">6.</span> <strong>Loyalitas penuh:</strong> Setiap anggota wajib menjaga loyalitas terhadap komunitas dan visi yang telah ditetapkan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">7.</span> <strong>Tidak ada double standard:</strong> Aturan berlaku sama untuk semua anggota, tanpa terkecuali.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">8.</span> <strong>Menjaga rahasia internal:</strong> Semua informasi internal komunitas bersifat rahasia dan tidak boleh disebarluaskan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">9.</span> <strong>Larangan sabotase:</strong> Segala bentuk sabotase terhadap produk atau layanan komunitas akan ditindak tegas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">10.</span> <strong>Menghormati keputusan tim:</strong> Keputusan tim pengembang bersifat final dan harus dihormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">11.</span> <strong>Larangan fitnah:</strong> Menyebarkan fitnah terhadap anggota lain adalah pelanggaran berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">12.</span> <strong>Keterbukaan informasi:</strong> Setiap anggota berhak mendapat informasi yang transparan dari tim.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">13.</span> <strong>Menjaga nama baik:</strong> Setiap anggota wajib menjaga nama baik komunitas di mana pun berada.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">14.</span> <strong>Larangan plagiarisme:</strong> Mencuri atau mengklaim karya orang lain sebagai milik sendiri adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">15.</span> <strong>Menghormati perbedaan pendapat:</strong> Perbedaan pendapat boleh, namun harus disampaikan dengan sopan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">16.</span> <strong>Larangan intimidasi:</strong> Mengintimidasi anggota lain untuk kepentingan pribadi dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">17.</span> <strong>Kemitraan yang sehat:</strong> Semua kemitraan harus dibangun di atas kepercayaan dan saling menguntungkan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">18.</span> <strong>Larangan eksploitasi:</strong> Mengeksploitasi anggota lain atau sumber daya komunitas dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">19.</span> <strong>Menjaga etika komunikasi:</strong> Komunikasi harus tetap profesional dan santun.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">20.</span> <strong>Larangan spam:</strong> Mengirim pesan berulang-ulang yang tidak berguna dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">21.</span> <strong>Menghormati privasi:</strong> Privasi anggota lain wajib dijaga dan tidak boleh dilanggar.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">22.</span> <strong>Larangan doxing:</strong> Menyebarkan data pribadi anggota lain tanpa izin adalah pelanggaran berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">23.</span> <strong>Kepatuhan penuh:</strong> Seluruh anggota wajib mematuhi semua aturan yang tercantum.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">24.</span> <strong>Larangan menyembunyikan identitas:</strong> Menggunakan identitas palsu untuk kepentingan jahat dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">25.</span> <strong>Menjaga semangat komunitas:</strong> Setiap anggota wajib menjaga semangat positif dalam komunitas.</p>
+
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">B. ANTI-DISKRIMINASI & SARA (26-50)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">26.</span> <strong>Anti-rasisme:</strong> Segala bentuk diskriminasi ras, suku, warna kulit tidak ditoleransi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">27.</span> <strong>Menghormati agama:</strong> Dilarang menghina agama atau kepercayaan mana pun.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">28.</span> <strong>Menghormati budaya:</strong> Dilarang merendahkan budaya atau adat istiadat daerah mana pun.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">29.</span> <strong>Bahasa santun:</strong> Wajib menggunakan bahasa yang santun dan menghormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">30.</span> <strong>Larangan ejekan fisik:</strong> Mengejek penampilan fisik, kecacatan, atau kondisi personal anggota lain dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">31.</span> <strong>Menerima perbedaan:</strong> Setiap anggota wajib menerima perbedaan pendapat dengan lapang dada.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">32.</span> <strong>Larangan ujaran kebencian:</strong> Ujaran kebencian berbasis apapun tidak akan ditoleransi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">33.</span> <strong>Menghormati gender:</strong> Dilarang melakukan diskriminasi berbasis gender.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">34.</span> <strong>Larangan bullying:</strong> Segala bentuk perundungan (bullying) dilarang keras.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">35.</span> <strong>Menghormati usia:</strong> Dilarang merendahkan anggota berdasarkan usia.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">36.</span> <strong>Larangan diskriminasi pendidikan:</strong> Dilarang merendahkan anggota berdasarkan latar belakang pendidikan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">37.</span> <strong>Menghormati profesi:</strong> Dilarang merendahkan anggota berdasarkan profesi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">38.</span> <strong>Larangan diskriminasi ekonomi:</strong> Dilarang merendahkan anggota berdasarkan status ekonomi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">39.</span> <strong>Menghormati asal daerah:</strong> Dilarang merendahkan anggota berdasarkan asal daerah.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">40.</span> <strong>Larangan diskriminasi politik:</strong> Dilarang membawa isu politik ke dalam komunitas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">41.</span> <strong>Menghormati pilihan pribadi:</strong> Pilihan pribadi anggota harus dihormati selama tidak merugikan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">42.</span> <strong>Larangan menghina keluarga:</strong> Menghina keluarga anggota lain adalah pelanggaran berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">43.</span> <strong>Menghormati privasi keluarga:</strong> Privasi keluarga anggota lain wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">44.</span> <strong>Larangan diskriminasi hobi:</strong> Dilarang merendahkan anggota berdasarkan hobi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">45.</span> <strong>Menghormati pilihan hidup:</strong> Pilihan hidup anggota harus dihormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">46.</span> <strong>Larangan diskriminasi status:</strong> Dilarang merendahkan anggota berdasarkan status.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">47.</span> <strong>Menghormati perbedaan gaya:</strong> Perbedaan gaya hidup harus dihormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">48.</span> <strong>Larangan diskriminasi bahasa:</strong> Dilarang merendahkan anggota berdasarkan bahasa.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">49.</span> <strong>Menghormati perbedaan budaya:</strong> Perbedaan budaya harus disikapi dengan bijak.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">50.</span> <strong>Larangan diskriminasi aliran:</strong> Dilarang merendahkan anggota berdasarkan aliran kepercayaan.</p>
+
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">C. KEAMANAN & DATA (51-75)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">51.</span> <strong>Perlindungan data pribadi:</strong> Dilarang menyebarkan data pribadi anggota tanpa izin.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">52.</span> <strong>Akun resmi:</strong> Hanya gunakan akun yang terdaftar resmi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">53.</span> <strong>Larangan peretasan:</strong> Peretasan, cracking, akses ilegal ditindak hukum.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">54.</span> <strong>Kebijakan privasi:</strong> Interaksi bersifat privat, tidak boleh direkam/disebar.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">55.</span> <strong>Akun bersama:</strong> Berbagi akun dengan pihak luar adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">56.</span> <strong>Keamanan password:</strong> Setiap anggota wajib menjaga keamanan password masing-masing.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">57.</span> <strong>Larangan phishing:</strong> Segala bentuk phishing atau penipuan dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">58.</span> <strong>Menjaga keamanan sistem:</strong> Setiap anggota wajib melaporkan celah keamanan yang ditemukan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">59.</span> <strong>Larangan malware:</strong> Menyebarkan malware atau virus adalah pelanggaran berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">60.</span> <strong>Keamanan transaksi:</strong> Transaksi dalam komunitas wajib aman dan transparan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">61.</span> <strong>Larangan pencurian data:</strong> Mencuri data anggota adalah pelanggaran serius.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">62.</span> <strong>Menjaga kerahasiaan:</strong> Semua informasi internal bersifat rahasia.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">63.</span> <strong>Larangan penyalahgunaan:</strong> Menyalahgunakan akses untuk kepentingan pribadi dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">64.</span> <strong>Keamanan data transaksi:</strong> Data transaksi wajib dilindungi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">65.</span> <strong>Larangan akses ilegal:</strong> Mengakses sistem tanpa izin adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">66.</span> <strong>Menjaga kerahasiaan kode:</strong> Kode sumber produk wajib dijaga kerahasiaannya.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">67.</span> <strong>Larangan membocorkan data:</strong> Membocorkan data internal adalah pelanggaran berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">68.</span> <strong>Keamanan akun admin:</strong> Akun admin wajib dijaga keamanannya dengan maksimal.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">69.</span> <strong>Larangan social engineering:</strong> Social engineering untuk mencuri data dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">70.</span> <strong>Menjaga keamanan server:</strong> Server komunitas wajib dijaga keamanannya.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">71.</span> <strong>Larangan DDoS:</strong> Melakukan serangan DDoS ke sistem adalah pelanggaran hukum.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">72.</span> <strong>Keamanan backup:</strong> Setiap data wajib memiliki backup yang aman.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">73.</span> <strong>Larangan enkripsi ilegal:</strong> Mengenkripsi data untuk tujuan jahat dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">74.</span> <strong>Menjaga keamanan infrastruktur:</strong> Infrastruktur komunitas wajib dijaga keamanannya.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">75.</span> <strong>Larangan eksploitasi bug:</strong> Mengeksploitasi bug untuk keuntungan pribadi dilarang.</p>
+
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">D. KOMUNIKASI & INTERAKSI (76-100)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">76.</span> <strong>Larangan spamming:</strong> Mengirim pesan berulang-ulang dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">77.</span> <strong>Konten layak:</strong> Dilarang bagikan konten dewasa, kekerasan, atau ilegal.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">78.</span> <strong>Promosi produk:</strong> Memasarkan produk luar tanpa izin adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">79.</span> <strong>Menghormati sesama anggota:</strong> Wajib saling menghormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">80.</span> <strong>Larangan doxing:</strong> Menyebarkan data identitas tanpa izin dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">81.</span> <strong>Komunikasi efektif:</strong> Setiap komunikasi wajib efektif dan jelas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">82.</span> <strong>Larangan gossip:</strong> Menyebarkan gosip tidak berguna dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">83.</span> <strong>Menghargai waktu:</strong> Menghargai waktu anggota lain dalam berkomunikasi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">84.</span> <strong>Larangan bahasa kasar:</strong> Menggunakan bahasa kasar dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">85.</span> <strong>Komunikasi profesional:</strong> Komunikasi wajib profesional dan santun.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">86.</span> <strong>Larangan mengadu domba:</strong> Mengadu domba antar anggota dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">87.</span> <strong>Menjaga kerukunan:</strong> Setiap anggota wajib menjaga kerukunan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">88.</span> <strong>Larangan provokasi:</strong> Provokasi terhadap anggota lain dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">89.</span> <strong>Komunikasi terbuka:</strong> Komunikasi antar anggota wajib terbuka dan jujur.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">90.</span> <strong>Larangan hoax:</strong> Menyebarkan berita hoax dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">91.</span> <strong>Menghormati pendapat:</strong> Pendapat anggota lain wajib dihormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">92.</span> <strong>Larangan menghina:</strong> Menghina anggota lain dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">93.</span> <strong>Komunikasi produktif:</strong> Komunikasi wajib produktif dan membangun.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">94.</span> <strong>Larangan fitnah:</strong> Menyebarkan fitnah dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">95.</span> <strong>Menjaga etika:</strong> Etika komunikasi wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">96.</span> <strong>Larangan mengancam:</strong> Mengancam anggota lain dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">97.</span> <strong>Komunikasi harmonis:</strong> Menjaga komunikasi yang harmonis.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">98.</span> <strong>Larangan merendahkan:</strong> Merendahkan anggota lain dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">99.</span> <strong>Menjaga sopan santun:</strong> Sopan santun wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">100.</span> <strong>Larangan mengganggu:</strong> Mengganggu kenyamanan anggota lain dilarang.</p>
+
+                            <!-- 101-200: Dilanjutkan dengan pola yang sama (gue ringkas di sini karena batas karakter) -->
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">E. KEPATUHAN & SANKSI (101-150)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">101.</span> <strong>Kepatuhan penuh:</strong> Seluruh aturan wajib dipatuhi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">102.</span> <strong>Banned IP permanen:</strong> Pelanggaran = banned IP permanen tanpa ampun.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">103.</span> <strong>Tindakan hukum:</strong> Pelanggaran berat dapat ditindak secara hukum.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">104.</span> <strong>Tidak ada negosiasi:</strong> Sanksi final dan tidak dapat dinegosiasikan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">105.</span> <strong>Monitoring aktif:</strong> Tim berhak memantau seluruh aktivitas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">106.</span> <strong>Larangan banding:</strong> Tidak ada proses banding untuk sanksi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">107.</span> <strong>Penegakan aturan:</strong> Aturan ditegakkan secara konsisten.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">108.</span> <strong>Larangan menghindari sanksi:</strong> Menghindari sanksi adalah pelanggaran tambahan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">109.</span> <strong>Keberlakuan global:</strong> Aturan berlaku di semua platform.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">110.</span> <strong>Larangan memanipulasi:</strong> Memanipulasi proses penegakan aturan dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">111.</span> <strong>Kejelasan sanksi:</strong> Sanksi dijelaskan secara transparan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">112.</span> <strong>Larangan intimidasi saksi:</strong> Mengintimidasi saksi pelanggaran dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">113.</span> <strong>Kepatuhan sukarela:</strong> Kepatuhan diharapkan secara sukarela.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">114.</span> <strong>Larangan menyembunyikan bukti:</strong> Menyembunyikan bukti pelanggaran dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">115.</span> <strong>Penegakan adil:</strong> Sanksi diberikan secara adil.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">116.</span> <strong>Larangan balas dendam:</strong> Balas dendam atas sanksi dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">117.</span> <strong>Kesadaran aturan:</strong> Setiap anggota wajib sadar akan aturan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">118.</span> <strong>Larangan merusak bukti:</strong> Merusak bukti pelanggaran dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">119.</span> <strong>Penegakan proporsional:</strong> Sanksi diberikan secara proporsional.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">120.</span> <strong>Larangan kolusi:</strong> Kolusi untuk menghindari sanksi dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">121.</span> <strong>Keterbukaan sanksi:</strong> Sanksi diumumkan secara terbuka.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">122.</span> <strong>Larangan mengulangi pelanggaran:</strong> Mengulangi pelanggaran = sanksi lebih berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">123.</span> <strong>Penegakan tegas:</strong> Penegakan aturan dilakukan dengan tegas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">124.</span> <strong>Larangan menghasut:</strong> Menghasut orang lain melanggar aturan dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">125.</span> <strong>Kesadaran konsekuensi:</strong> Setiap anggota sadar akan konsekuensi pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">126.</span> <strong>Larangan mempermainkan aturan:</strong> Mempermainkan aturan adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">127.</span> <strong>Penegakan konsisten:</strong> Penegakan aturan dilakukan secara konsisten.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">128.</span> <strong>Larangan memanfaatkan celah:</strong> Memanfaatkan celah aturan dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">129.</span> <strong>Kepatuhan mutlak:</strong> Kepatuhan terhadap aturan adalah mutlak.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">130.</span> <strong>Larangan mengelak:</strong> Mengelak dari sanksi adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">131.</span> <strong>Penegakan profesional:</strong> Penegakan aturan dilakukan secara profesional.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">132.</span> <strong>Larangan meremehkan aturan:</strong> Meremehkan aturan adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">133.</span> <strong>Kesadaran bersama:</strong> Kesadaran aturan adalah tanggung jawab bersama.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">134.</span> <strong>Larangan mengabaikan sanksi:</strong> Mengabaikan sanksi adalah pelanggaran tambahan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">135.</span> <strong>Penegakan berkeadilan:</strong> Penegakan aturan dilakukan dengan adil.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">136.</span> <strong>Larangan protes tidak pantas:</strong> Protes terhadap sanksi harus dilakukan secara pantas.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">137.</span> <strong>Kepatuhan organisasi:</strong> Kepatuhan terhadap aturan organisasi adalah wajib.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">138.</span> <strong>Larangan menghalangi penegakan:</strong> Menghalangi penegakan aturan dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">139.</span> <strong>Penegakan transparan:</strong> Proses penegakan aturan dilakukan secara transparan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">140.</span> <strong>Larangan menuduh palsu:</strong> Menuduh palsu pelanggaran adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">141.</span> <strong>Kesadaran risiko:</strong> Setiap anggota sadar akan risiko pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">142.</span> <strong>Larangan merusak reputasi:</strong> Merusak reputasi komunitas adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">143.</span> <strong>Penegakan humanis:</strong> Penegakan aturan tetap menjunjung nilai kemanusiaan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">144.</span> <strong>Larangan menipu:</strong> Menipu tim pengembang adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">145.</span> <strong>Kepatuhan sukarela:</strong> Kepatuhan diharapkan secara sukarela dan sadar.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">146.</span> <strong>Larangan menyangkal:</strong> Menyangkal pelanggaran yang terbukti adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">147.</span> <strong>Penegakan final:</strong> Keputusan tim pengembang adalah final.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">148.</span> <strong>Larangan mengulur waktu:</strong> Mengulur waktu dalam proses penegakan dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">149.</span> <strong>Kesadaran kolektif:</strong> Kesadaran aturan adalah tanggung jawab kolektif.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">150.</span> <strong>Larangan mengabaikan peringatan:</strong> Mengabaikan peringatan adalah pelanggaran.</p>
+
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">F. HAK KEKAYAAN INTELEKTUAL (151-175)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">151.</span> <strong>Plagiarisme kode:</strong> Mencuri atau mengklaim kode produk adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">152.</span> <strong>Penggunaan logo:</strong> Logo dan merek dilindungi undang-undang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">153.</span> <strong>Hak cipta konten:</strong> Konten komunitas adalah hak milik Notion Viper.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">154.</span> <strong>Lisensi produk:</strong> Setiap produk memiliki lisensi yang wajib dihormati.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">155.</span> <strong>Reproduksi ilegal:</strong> Memperbanyak produk tanpa izin dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">156.</span> <strong>Hak cipta desain:</strong> Desain UI/UX dilindungi hak cipta.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">157.</span> <strong>Larangan modifikasi:</strong> Memodifikasi produk tanpa izin dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">158.</span> <strong>Hak cipta dokumentasi:</strong> Dokumentasi produk dilindungi hak cipta.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">159.</span> <strong>Larangan distribusi:</strong> Mendistribusikan produk tanpa izin dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">160.</span> <strong>Hak cipta nama:</strong> Nama produk dan merek dilindungi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">161.</span> <strong>Larangan komersialisasi:</strong> Mengkomersialkan produk tanpa izin dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">162.</span> <strong>Hak cipta source code:</strong> Source code dilindungi hak cipta.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">163.</span> <strong>Larangan reverse engineering:</strong> Reverse engineering produk dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">164.</span> <strong>Hak cipta aset visual:</strong> Aset visual dilindungi hak cipta.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">165.</span> <strong>Larangan penggandaan:</strong> Menggandakan produk tanpa izin dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">166.</span> <strong>Hak cipta konten anggota:</strong> Konten yang dibuat anggota tetap hak miliknya.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">167.</span> <strong>Larangan plagiarisme konten:</strong> Mengklaim konten anggota sebagai milik sendiri dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">168.</span> <strong>Hak cipta fitur:</strong> Fitur produk dilindungi hak cipta.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">169.</span> <strong>Larangan peniruan:</strong> Meniru produk komunitas dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">170.</span> <strong>Hak cipta integrasi:</strong> Integrasi dengan layanan lain dilindungi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">171.</span> <strong>Larangan dekompilasi:</strong> Mendekompilasi produk dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">172.</span> <strong>Hak cipta basis data:</strong> Basis data produk dilindungi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">173.</span> <strong>Larangan ekstraksi data:</strong> Mengekstrak data produk dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">174.</span> <strong>Hak cipta arsitektur:</strong> Arsitektur produk dilindungi.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">175.</span> <strong>Larangan penyalahgunaan lisensi:</strong> Menyalahgunakan lisensi produk dilarang.</p>
+
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">G. KODE ETIK KHUSUS (176-200)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">176.</span> <strong>Backstabbing:</strong> Dilarang keras pengkhianatan atau sabotase di belakang layar.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">177.</span> <strong>Manipulasi anggota:</strong> Memanipulasi anggota untuk kepentingan pribadi dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">178.</span> <strong>Menghasut kebencian:</strong> Menghasut kebencian terhadap tim atau anggota dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">179.</span> <strong>Menjatuhkan reputasi:</strong> Menyebarkan informasi yang menjatuhkan reputasi dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">180.</span> <strong>Ghosting:</strong> Anggota aktif wajib merespons komunikasi penting.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">181.</span> <strong>Larangan gossip internal:</strong> Menyebarkan gosip internal dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">182.</span> <strong>Menjaga solidaritas:</strong> Solidaritas antar anggota wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">183.</span> <strong>Larangan mengkhianati:</strong> Mengkhianati kepercayaan komunitas dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">184.</span> <strong>Menjaga integritas:</strong> Integritas anggota wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">185.</span> <strong>Larangan manipulasi data:</strong> Memanipulasi data komunitas dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">186.</span> <strong>Menjaga kejujuran:</strong> Kejujuran adalah nilai utama.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">187.</span> <strong>Larangan menipu tim:</strong> Menipu tim pengembang adalah pelanggaran berat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">188.</span> <strong>Menjaga amanah:</strong> Amanah anggota wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">189.</span> <strong>Larangan mengkhianati rahasia:</strong> Membocorkan rahasia komunitas dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">190.</span> <strong>Menjaga profesionalisme:</strong> Profesionalisme wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">191.</span> <strong>Larangan konflik kepentingan:</strong> Konflik kepentingan harus dihindari.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">192.</span> <strong>Menjaga netralitas:</strong> Netralitas dalam diskusi wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">193.</span> <strong>Larangan berpihak:</strong> Berpihak dalam konflik internal dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">194.</span> <strong>Menjaga keadilan:</strong> Keadilan wajib ditegakkan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">195.</span> <strong>Larangan diskriminasi peran:</strong> Merendahkan peran anggota lain dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">196.</span> <strong>Menjaga harmoni:</strong> Harmoni komunitas wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">197.</span> <strong>Larangan provokasi konflik:</strong> Memprovokasi konflik dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">198.</span> <strong>Menjaga persatuan:</strong> Persatuan anggota wajib dijaga.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">199.</span> <strong>Larangan memecah belah:</strong> Memecah belah komunitas dilarang.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">200.</span> <strong>Menjaga kehormatan bersama:</strong> Kehormatan komunitas adalah tanggung jawab semua anggota.</p>
+
+                            <h5 class="font-bold text-white text-xs border-b border-[#4D4D52]/30 pb-1 mt-4">H. KETENTUAN PENUTUP (201-210)</h5>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">201.</span> <strong>Kebijakan berubah:</strong> Aturan dapat berubah sewaktu-waktu.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">202.</span> <strong>Penerimaan aturan:</strong> Dengan bergabung, Anda menyetujui seluruh aturan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">203.</span> <strong>Kelayakan anggota:</strong> Tim berhak menolak atau mengeluarkan anggota.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">204.</span> <strong>Penafsiran aturan:</strong> Tim berhak menafsirkan aturan dengan kewenangan penuh.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">205.</span> <strong>Kehormatan komunitas:</strong> Menjaga kehormatan komunitas adalah tanggung jawab semua.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">206.</span> <strong>Final dan mengikat:</strong> Aturan bersifat final dan mengikat.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">207.</span> <strong>Kesadaran kolektif:</strong> Kesadaran aturan adalah tanggung jawab kolektif.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">208.</span> <strong>Penegakan berkelanjutan:</strong> Penegakan aturan dilakukan secara berkelanjutan.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">209.</span> <strong>Larangan mengelak:</strong> Mengelak dari tanggung jawab adalah pelanggaran.</p>
+                            <p class="text-neutral-400 text-[11px]"><span class="text-white font-semibold">210.</span> <strong>Menjaga nama baik:</strong> Nama baik komunitas adalah prioritas utama.</p>
+                        </div>
+
+                        <div class="pt-2 text-[10px] text-neutral-500 italic border-t border-[#4D4D52]/30">
+                            Disusun dan diresmikan pertama kali pada tahun 2022 oleh <strong>Brian Official</strong> & <strong>Dion</strong> dalam Era Space Community ID, diperbarui berkala untuk Notion Viper Productions.
+                        </div>
+                    </div>
+
+                    <button onclick="closeTosModal()" class="w-full bg-chrome hover:bg-[#D0D0D3] text-black text-xs py-3 rounded-xl font-bold transition-all">
+                        Saya Mengerti & Mematuhi Aturan
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============ LOADING SCREEN SCRIPT ============ -->
+    <script>
+        // Loading screen sequence
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        const loadSub = document.getElementById('loadSub');
+
+        // Step 1: Tampilkan "Notion Viper Productions" selama 2 detik
+        setTimeout(() => {
+            loadSub.textContent = 'PREPARING...';
+        }, 1000);
+
+        // Step 2: Ganti ke "Powered By Brian Official And Dion"
+        setTimeout(() => {
+            loadSub.textContent = '⚡ BY BRIAN OFFICIAL & DION ⚡';
+        }, 2500);
+
+        // Step 3: Fade out loading screen, tampilkan konten
+        setTimeout(() => {
+            loadingScreen.classList.add('hide');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+                // Buka kembali scroll halaman setelah loading selesai
+                document.body.classList.remove('lock-scroll');
+            }, 1000);
+        }, 3800);
+
+        // Modal Sejarah
+        const historyModal = document.getElementById('historyModal');
+        const modalContent = document.getElementById('modalContent');
+
+        function openHistoryModal() {
+            historyModal.classList.remove('hidden');
+            setTimeout(() => {
+                historyModal.classList.remove('opacity-0');
+                historyModal.classList.add('opacity-100');
+                if (window.innerWidth < 640) {
+                    modalContent.classList.remove('translate-y-full');
+                    modalContent.classList.add('translate-y-0');
+                } else {
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }
+            }, 50);
+            document.body.classList.add('lock-scroll');
+        }
+
+        function closeHistoryModal() {
+            if (window.innerWidth < 640) {
+                modalContent.classList.remove('translate-y-0');
+                modalContent.classList.add('translate-y-full');
+            } else {
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+            }
+            historyModal.classList.remove('opacity-100');
+            historyModal.classList.add('opacity-0');
+            setTimeout(() => {
+                historyModal.classList.add('hidden');
+            }, 300);
+            document.body.classList.remove('lock-scroll');
+        }
+
+        historyModal.addEventListener('click', function(e) {
+            if (e.target === historyModal) {
+                closeHistoryModal();
+            }
+        });
+
+        // Modal TOS
+        const tosModal = document.getElementById('tosModal');
+        const tosModalContent = document.getElementById('tosModalContent');
+
+        function openTosModal() {
+            tosModal.classList.remove('hidden');
+            setTimeout(() => {
+                tosModal.classList.remove('opacity-0');
+                tosModal.classList.add('opacity-100');
+                if (window.innerWidth < 640) {
+                    tosModalContent.classList.remove('translate-y-full');
+                    tosModalContent.classList.add('translate-y-0');
+                } else {
+                    tosModalContent.classList.remove('scale-95');
+                    tosModalContent.classList.add('scale-100');
+                }
+            }, 50);
+            document.body.classList.add('lock-scroll');
+        }
+
+        function closeTosModal() {
+            if (window.innerWidth < 640) {
+                tosModalContent.classList.remove('translate-y-0');
+                tosModalContent.classList.add('translate-y-full');
+            } else {
+                tosModalContent.classList.remove('scale-100');
+                tosModalContent.classList.add('scale-95');
+            }
+            tosModal.classList.remove('opacity-100');
+            tosModal.classList.add('opacity-0');
+            setTimeout(() => {
+                tosModal.classList.add('hidden');
+            }, 300);
+            document.body.classList.remove('lock-scroll');
+        }
+
+        tosModal.addEventListener('click', function(e) {
+            if (e.target === tosModal) {
+                closeTosModal();
+            }
+        });
+    </script>
+</body>
+</html>
