@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Halaman Tidak Ditemukan | Notion Viper Productions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --black: #0A0A0B;
+    --panel: #131315;
+    --line: rgba(255,255,255,0.10);
+    --line-strong: rgba(255,255,255,0.30);
+    --white: #F6F6F4;
+    --dim: #9A9A9E;
+    --dimmer: #5D5D61;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  button,a{ -webkit-tap-highlight-color:transparent; }
+
+  /* ================= LAYOUT UTILITIES ================= */
+  .flex{ display:flex; }
+  .items-center{ align-items:center; }
+  .justify-between{ justify-content:space-between; }
+  .leading-none{ line-height:1; }
+  .gap-3{ gap:12px; }
+
+  body{
+    margin:0;
+    background: var(--black);
+    color: var(--white);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  h1,h2,h3,.serif{ font-family:'Fraunces', serif; }
+  svg{ display:block; }
+
+  ::-webkit-scrollbar{ width:5px; }
+  ::-webkit-scrollbar-track{ background: var(--black); }
+  ::-webkit-scrollbar-thumb{ background:#3a3a3d; border-radius:10px; }
+
+  /* ================= BACKGROUND EFFECTS ================= */
+  .bg-fx{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; background:var(--black); }
+  .bg-grid{
+    position:absolute; inset:-2px;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 85%);
+    animation: gridDrift 40s linear infinite;
+  }
+  @keyframes gridDrift{
+    0%{ background-position: 0 0, 0 0; }
+    100%{ background-position: 64px 128px, 64px 128px; }
+  }
+  .orb{
+    position:absolute; border-radius:50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
+    filter: blur(8px);
+  }
+  .orb-a{ width:600px; height:600px; top:50%; left:50%; transform:translate(-50%,-50%); animation: floatA 22s ease-in-out infinite; }
+  @keyframes floatA{ 0%,100%{ transform:translate(-50%,-50%) scale(1);} 50%{ transform:translate(-45%,-55%) scale(1.15);} }
+
+  .bg-sweep{
+    position:absolute; top:0; left:-40%; width:40%; height:100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.045), transparent);
+    animation: sweep 14s ease-in-out infinite;
+  }
+  @keyframes sweep{
+    0%{ left:-40%; }
+    50%{ left:110%; }
+    100%{ left:110%; }
+  }
+
+  .grain{
+    position:absolute; inset:0; opacity:.28; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+  .vignette{
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 90% 70% at 50% 50%, transparent 30%, rgba(0,0,0,0.65) 100%);
+  }
+
+  main, header, footer{ position:relative; z-index:2; }
+
+  .wrap{ max-width: 1120px; margin:0 auto; padding: 0 20px; width:100%; }
+  @media (min-width:640px){ .wrap{ padding: 0 28px; } }
+
+  /* Header */
+  header{
+    position: sticky; top:0; z-index:50;
+    background: rgba(10,10,11,0.78);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* 404 Hero Content */
+  .error-code{
+    font-family:'Fraunces', serif;
+    font-size: clamp(6rem, 16vw, 11rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    margin: 0;
+    background: linear-gradient(180deg, var(--white) 30%, var(--dimmer) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Buttons */
+  .btn-primary{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--white); color: #0A0A0B; font-weight:600; font-size:14px;
+    padding: 14px 26px; text-decoration:none; border:none; position:relative; overflow:hidden;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, background .3s ease;
+  }
+  .btn-primary:hover{ background:#EDEDEA; transform: translateY(-2px); box-shadow: 0 14px 34px rgba(255,255,255,0.16); }
+  .btn-primary:active{ transform: translateY(0) scale(.97); }
+
+  .btn-secondary{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--white); font-size:14px; font-weight:500;
+    border:1px solid var(--line-strong); padding:13px 22px; text-decoration:none;
+    transition: background .3s ease, border-color .3s ease, transform .25s ease;
+  }
+  .btn-secondary:hover{ background: rgba(255,255,255,0.05); border-color: var(--white); transform: translateY(-2px); }
+
+  .fade-up{ opacity:0; transform: translateY(22px); animation: riseUp .8s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes riseUp{ to{ opacity:1; transform: translateY(0); } }
+
+  ::selection{ background: var(--white); color: var(--black); }
+
+  @media (prefers-reduced-motion: reduce){
+    .fade-up{ opacity:1; transform:none; animation:none; }
+    .bg-grid,.orb,.bg-sweep{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-fx">
+  <div class="bg-grid"></div>
+  <div class="orb orb-a"></div>
+  <div class="bg-sweep"></div>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap flex items-center justify-between" style="height:76px;">
+    <a href="notion_viper_productions.html" class="flex items-center gap-3" style="text-decoration:none; color:inherit;">
+      <div style="width:34px;height:34px;border:1px solid var(--line-strong);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+        <div style="width:7px;height:7px;background:var(--white);border-radius:50%;"></div>
+      </div>
+      <div class="leading-none">
+        <div style="font-size:13px;font-weight:600;letter-spacing:.02em;">Notion Viper Productions</div>
+        <div style="font-size:10px;color:var(--dimmer);margin-top:3px;">Serui, Kepulauan Yapen — Papua</div>
+      </div>
+    </a>
+    <div>
+      <a href="#kontak" class="btn-secondary" style="padding:8px 16px; font-size:13px;">Bantuan &amp; Dukungan</a>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="wrap" style="flex:1; display:flex; align-items:center; justify-content:center; padding-top:60px; padding-bottom:60px;">
+  <div style="max-width:620px; text-align:center;" class="fade-up">
+    
+    <!-- Status Badge -->
+    <div style="display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line-strong); padding:6px 14px; border-radius:999px; margin-bottom:24px; background:rgba(255,255,255,0.02);">
+      <span style="width:6px; height:6px; background:var(--dimmer); border-radius:50%;"></span>
+      <span style="font-size:12px; font-weight:500; color:var(--dim); letter-spacing:.02em;">Error Code 404</span>
+    </div>
+
+    <!-- Title / Heading -->
+    <h1 class="error-code">404</h1>
+    
+    <h2 style="font-size:clamp(1.5rem,3.5vw,2.2rem); font-weight:500; margin:16px 0 12px 0;">Halaman Tidak Ditemukan</h2>
+    
+    <p style="font-size:15px; color:var(--dim); line-height:1.75; margin:0 auto 36px auto; max-width:480px;">
+      Tautan yang Anda tuju mungkin telah dipindahkan, diubah namanya, atau belum dirilis dalam ekosistem Notion Viper Productions.
+    </p>
+
+    <!-- Navigation Buttons -->
+    <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <a href="/" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Kembali ke Beranda
+      </a>
+      <a href="#produk" class="btn-secondary">
+        Jelajahi Produk Kami
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="wrap" style="padding:34px 28px; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+  <p style="font-size:12px; color:var(--dimmer); margin:0;">&copy; 2026 Notion Viper Productions — Serui, Papua.</p>
+  <p style="font-size:12px; color:var(--dimmer); margin:0;">Untuk Papua, lalu ke seluruh dunia.</p>
+</footer>
+
+</body>
+</html>
