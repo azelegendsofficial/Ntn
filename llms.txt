@@ -1,0 +1,19 @@
+# Notion Viper Productions
+
+> Organisasi pengembang teknologi asal Serui, Kepulauan Yapen, Papua, Indonesia. Membangun perangkat lunak, kecerdasan buatan, dan layanan infrastruktur digital yang bermanfaat, andal, dan mudah diakses — dirancang, dikembangkan, dan dirilis langsung dari tanah Papua.
+
+## Tentang
+- Nama: Notion Viper Productions (juga dikenal sebagai Notion Family)
+- Lokasi: Serui, Kabupaten Kepulauan Yapen, Papua, Indonesia
+- Didirikan: dimulai sebagai proyek komunitas tahun 2021, resmi berdiri sebagai Notion Viper Productions pada Juli 2026
+- Founder & CEO: Britama P. Ere (Siswa SMA Kristen Kasih Bangsa, Serui)
+- Co-Owner: Christian Budiono (Siswa SMP Kristen Kasih Bangsa, Serui)
+- Visi: Mengembangkan dunia teknologi di wilayah Papua
+- Misi: Menyediakan teknologi yang bermanfaat dan mudah diakses secara gratis dengan prioritas bagi masyarakat Papua; menyetarakan peluang akses teknologi bagi anak-anak, pelajar, dan pengembang di Papua; membuktikan teknologi hebat bisa lahir dari mana saja; membangun ekosistem mandiri lewat program kemitraan Notion Family.
+
+## Produk
+- Notion Downloader — Notion Downloader Adalah Sebuah Alat Untuk Mendownload Lagu Ataupun Video Dari Semua Social Media Atau Website Yang Ada Video Di Dalamnya.
+- Notion Chat — Notion Chat Adalah Sebuah Aplikasi Berbasis Web Yang Fungsinya Mirip WhatsApp Yakni Chat Ataupun Pasang Story.
+
+## Website
+https://notionfamily.my.id
