@@ -33,4 +33,4 @@ Allow: /
 User-agent: Bytespider
 Allow: /
 
-Sitemap: https://www.notionfamily.my.id/sitemap.xml
+sitemap:https://www.notionfamily.my.id/sitemap.xml
